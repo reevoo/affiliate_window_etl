@@ -1,0 +1,4 @@
+# This file is generated from the ERB template:
+config/fluentd.conf
+
+*.gem

@@ -1,0 +1,33 @@
+<source>
+  @type unix
+  path <%= config.fluentd_socket %>
+</source>
+
+<match affwin.*>
+  @type     sql
+  adapter   postgresql
+  socket   <%= config.fluentd_socket %>
+
+  host     <%= config.postgres_host %>
+  port     <%= config.postgres_port %>
+  database <%= config.postgres_database %>
+  username <%= config.postgres_username %>
+  password <%= config.postgres_password %>
+
+  <% schema.tables.each do |table| %>
+    <table affwin.<%= table.name %>>
+      table <%= table.name %>
+      column_mapping "<%= table.fluentd_mappings %>"
+    </table>
+  <% end %>
+
+  # This table isn't used but the plugin requires a default table.
+  <table>
+    table default
+    column_mapping "a:a"
+  </table>
+</match>
+
+<match debug.*>
+  @type stdout
+</match>
