@@ -14,10 +14,6 @@ class AffiliateWindow::ETL
       env.fetch("AFFILIATE_API_PASSWORD", "password")
     end
 
-    def fluentd_socket
-      env.fetch("FLUENTD_SOCKET", "/tmp/affwin.sock")
-    end
-
     def postgres_host
       env.fetch("POSTGRES_HOST", "localhost")
     end

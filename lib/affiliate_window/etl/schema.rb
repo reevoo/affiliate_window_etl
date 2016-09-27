@@ -25,7 +25,10 @@ class AffiliateWindow::ETL
             commission_ranges_commission_range_min: string_type,
             commission_ranges_commission_range_max: string_type,
             sectors_merchant_sector_sector_id: integer_type,
-            sectors_merchant_sector_sector_name: string_type
+            sectors_merchant_sector_sector_name: string_type,
+            details_version: string_type,
+            details_modified: string_type,
+            feed_version: string_type,
           },
         ),
         Table.new(
@@ -73,6 +76,8 @@ class AffiliateWindow::ETL
             click_date: timestamp_type,
             transaction_date: timestamp_type,
             clickref: string_type,
+            validation_date: string_type,
+            declined_reason: string_type,
           },
         ),
         Table.new(
@@ -189,11 +194,6 @@ class AffiliateWindow::ETL
       def initialize(name:, columns:)
         self.name = name
         self.columns = columns
-      end
-
-      def fluentd_mappings
-        names = columns.keys
-        names.map { |c| "#{c}:#{c}" }.join(",")
       end
 
       def sql_definition

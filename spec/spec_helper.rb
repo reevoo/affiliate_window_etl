@@ -1,6 +1,6 @@
 require "affiliate_window_etl"
 
-require "support/fake_logger"
+require "support/fake_database"
 require "support/fake_client"
 
 require "rspec"

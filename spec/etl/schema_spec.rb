@@ -44,7 +44,10 @@ RSpec.describe AffiliateWindow::ETL::Schema do
         "  commission_ranges_commission_range_min varchar(255),",
         "  commission_ranges_commission_range_max varchar(255),",
         "  sectors_merchant_sector_sector_id integer,",
-        "  sectors_merchant_sector_sector_name varchar(255)",
+        "  sectors_merchant_sector_sector_name varchar(255),",
+        "  details_version varchar(255),",
+        "  details_modified varchar(255),",
+        "  feed_version varchar(255)",
         ")",
       ].join("\n")
     end

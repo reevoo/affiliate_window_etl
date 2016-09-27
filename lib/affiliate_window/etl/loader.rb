@@ -1,17 +1,17 @@
 class AffiliateWindow::ETL
   class Loader
-    attr_accessor :logger
+    attr_accessor :database
 
-    def initialize(logger:)
-      self.logger = logger
+    def initialize(database:)
+      self.database = database
     end
 
-    def load(record)
-      table_name = record.fetch(:record_type)
-      record.delete(:record_type)
-      fluentd_tag = "affwin.#{table_name}s"
+    def load(attributes)
+      record_type = attributes.delete(:record_type)
+      attributes.delete_if { |_, v| v.nil? }
 
-      logger.post(fluentd_tag, record)
+      model = database.model(record_type)
+      model.create!(attributes)
     end
   end
 end

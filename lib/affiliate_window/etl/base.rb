@@ -17,7 +17,7 @@ class AffiliateWindow::ETL
     )
 
     transformer = Transformer.new
-    loader = Loader.new(logger: socket_logger)
+    loader = Loader.new(database: database)
 
     extracter.extract.each do |record|
       transformer.transform(record).each do |transformed_record|
@@ -35,7 +35,13 @@ class AffiliateWindow::ETL
     )
   end
 
-  def socket_logger
-    SocketLogger.new(config.fluentd_socket)
+  def database
+    Database.new(
+      host: config.postgres_host,
+      port: config.postgres_port,
+      database: config.postgres_database,
+      username: config.postgres_username,
+      password: config.postgres_password,
+    )
   end
 end
