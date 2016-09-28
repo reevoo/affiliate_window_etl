@@ -1,11 +1,10 @@
 class AffiliateWindow::ETL
   class Scheduler
-    DAYS = 30
+    attr_accessor :database, :last_n_days
 
-    attr_accessor :database
-
-    def initialize(database:)
+    def initialize(database:, last_n_days:)
       self.database = database
+      self.last_n_days = last_n_days
     end
 
     def jobs
@@ -14,6 +13,7 @@ class AffiliateWindow::ETL
       schedule_last_n_days(:daily_transactions, jobs)
       schedule_last_n_days(:daily_clicks, jobs)
       schedule_last_n_days(:daily_impressions, jobs)
+      schedule_old_pending_transactions(jobs)
       schedule_merchants(jobs)
 
       jobs
@@ -23,7 +23,6 @@ class AffiliateWindow::ETL
 
     def schedule_last_n_days(type, jobs)
       today = Date.today
-      n_days_ago = today - DAYS + 1
 
       (n_days_ago..today).each do |date|
         job = Job.new(type, date: date.to_s)
@@ -31,8 +30,23 @@ class AffiliateWindow::ETL
       end
     end
 
+    def schedule_old_pending_transactions(jobs)
+      model = database.model(:transaction)
+      pending = model.where(status: "pending")
+      old_pending = pending.where("transaction_date < ?", n_days_ago)
+
+      transaction_ids = old_pending.pluck(:id)
+
+      job = Job.new(:transactions, transaction_ids: transaction_ids)
+      jobs.push(job)
+    end
+
     def schedule_merchants(jobs)
       jobs.push(Job.new(:merchants))
+    end
+
+    def n_days_ago
+      Date.today - last_n_days + 1
     end
 
     class Job

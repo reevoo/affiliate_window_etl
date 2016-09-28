@@ -44,8 +44,18 @@ class FakeClient
     }
   end
 
+  def get_transaction(params)
+    transaction_ids = params.fetch(:transaction_ids)
+    transactions = transaction_ids.map { |id| { i_id: id } }
+
+    { transaction: transactions }
+  end
+
   def get_transaction_product(params)
-    { transaction_product: [{ name: "iPhone 7" }] }
+    transaction_ids = params.fetch(:transaction_ids)
+    products = transaction_ids.map { |id| { name: "iPhone #{id}" } }
+
+    { transaction_product: products }
   end
 
   def get_click_stats(params)

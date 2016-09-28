@@ -80,6 +80,23 @@ class AffiliateWindow::ETL
       extract_transaction_products(yielder, transaction_ids: transaction_ids)
     end
 
+    def extract_transactions(yielder, transaction_ids:)
+      count = 0
+      transaction_ids.each_slice(CHUNK_SIZE) do |ids|
+        response = client.get_transaction(transaction_ids: ids)
+
+        transactions = response.fetch(:transaction)
+        transactions.each do |record|
+          yielder.yield(record.merge(record_type: :transaction))
+        end
+
+        count += [CHUNK_SIZE, ids.count].min
+        write "Extracted #{count} / #{transaction_ids.count} transactions"
+      end
+
+      extract_transaction_products(yielder, transaction_ids: transaction_ids)
+    end
+
     def extract_transaction_products(yielder, transaction_ids:)
       count = 0
       transaction_ids.each_slice(CHUNK_SIZE) do |ids|

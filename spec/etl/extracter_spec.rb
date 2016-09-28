@@ -23,7 +23,19 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
 
     expect(records).to eq [
       { record_type: :transaction, i_id: 111, d_click_date: "2016-01-01T00:00:00" },
-      { record_type: :transaction_product, name: "iPhone 7" },
+      { record_type: :transaction_product, name: "iPhone 111" },
+    ]
+  end
+
+  it "extracts transactions" do
+    enumerator = subject.extract(:transactions, transaction_ids: [3, 5])
+    records = enumerator.to_a
+
+    expect(records).to eq [
+      { record_type: :transaction, i_id: 3 },
+      { record_type: :transaction, i_id: 5 },
+      { record_type: :transaction_product, name: "iPhone 3" },
+      { record_type: :transaction_product, name: "iPhone 5" },
     ]
   end
 

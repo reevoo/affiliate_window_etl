@@ -1,8 +1,9 @@
 class FakeDatabase
-  attr_accessor :messages
+  attr_accessor :messages, :filters
 
   def initialize
     self.messages = []
+    self.filters = []
   end
 
   def model(record_type)
@@ -22,6 +23,15 @@ class FakeDatabase
         record_type: record_type,
         attributes: attributes,
       )
+    end
+
+    def where(*args)
+      database.filters.push(args)
+      self
+    end
+
+    def pluck(*args)
+      [3, 5]
     end
   end
 end
