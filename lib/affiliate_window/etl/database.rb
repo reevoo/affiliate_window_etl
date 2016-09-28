@@ -1,6 +1,12 @@
 class AffiliateWindow::ETL
   class Database
+    attr_accessor :params
+
     def initialize(params)
+      self.params = params
+    end
+
+    def connect!
       ActiveRecord::Base.establish_connection(params.merge(
         adapter: "postgresql",
         encoding: "unicode",
@@ -22,17 +28,62 @@ class AffiliateWindow::ETL
       }.fetch(record_type)
     end
 
-    class ClickStat          < ActiveRecord::Base; end
-    class CommissionGroup    < ActiveRecord::Base; end
-    class CommissionRange    < ActiveRecord::Base; end
-    class ImpressionStat     < ActiveRecord::Base; end
-    class Merchant           < ActiveRecord::Base; end
-    class MerchantSector     < ActiveRecord::Base; end
-    class Transaction        < ActiveRecord::Base; end
-    class TransactionPart    < ActiveRecord::Base; end
-    class TransactionProduct < ActiveRecord::Base; end
+    class ClickStat < ActiveRecord::Base
+      def self.identity
+        [:date, :merchant_name]
+      end
+    end
 
-    Transaction.inheritance_column = :_disabled
-    CommissionRange.inheritance_column = :_disabled
+    class CommissionGroup < ActiveRecord::Base
+      def self.identity
+        [:merchant_id, :commission_group_code]
+      end
+    end
+
+    class CommissionRange < ActiveRecord::Base
+      self.inheritance_column = :_disabled
+
+      def self.identity
+        [:merchant_id]
+      end
+    end
+
+    class ImpressionStat < ActiveRecord::Base
+      def self.identity
+        [:date, :merchant_name]
+      end
+    end
+
+    class Merchant < ActiveRecord::Base
+      def self.identity
+        [:id]
+      end
+    end
+
+    class MerchantSector < ActiveRecord::Base
+      def self.identity
+        [:merchant_id, :sector_id]
+      end
+    end
+
+    class Transaction < ActiveRecord::Base
+      self.inheritance_column = :_disabled
+
+      def self.identity
+        [:id]
+      end
+    end
+
+    class TransactionPart < ActiveRecord::Base
+      def self.identity
+        [:transaction_id, :commission_group_name]
+      end
+    end
+
+    class TransactionProduct < ActiveRecord::Base
+      def self.identity
+        [:id]
+      end
+    end
   end
 end

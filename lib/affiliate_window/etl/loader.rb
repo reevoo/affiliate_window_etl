@@ -11,7 +11,13 @@ class AffiliateWindow::ETL
       attributes.delete_if { |_, v| v.nil? }
 
       model = database.model(record_type)
-      model.create!(attributes)
+      identity = attributes.slice(*model.identity)
+
+      if (record = model.find_by(identity))
+        record.update!(attributes)
+      else
+        model.create!(attributes)
+      end
     end
   end
 end

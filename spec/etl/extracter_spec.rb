@@ -44,7 +44,7 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     records = enumerator.to_a
 
     expect(records).to eq [
-      { record_type: :click_stat, i_clicks: 123 },
+      { record_type: :click_stat, i_clicks: 123, date: "2016-01-01" },
     ]
   end
 
@@ -53,7 +53,7 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     records = enumerator.to_a
 
     expect(records).to eq [
-      { record_type: :impression_stat, i_impressions: 456 },
+      { record_type: :impression_stat, i_impressions: 456, date: "2016-01-01" },
     ]
   end
 

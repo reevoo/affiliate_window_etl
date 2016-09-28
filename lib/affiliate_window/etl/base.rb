@@ -6,6 +6,8 @@ class AffiliateWindow::ETL
   end
 
   def run
+    database.connect!
+
     scheduler.jobs.each do |job|
       extracter.extract(job.type, job.args).each do |record|
         transformer.transform(record).each do |transformed_record|
@@ -13,6 +15,12 @@ class AffiliateWindow::ETL
         end
       end
     end
+  end
+
+  def migrate
+    database.connect!
+
+    schema.migrate
   end
 
   private
@@ -54,5 +62,9 @@ class AffiliateWindow::ETL
       username: config.postgres_username,
       password: config.postgres_password,
     )
+  end
+
+  def schema
+    Schema.new
   end
 end

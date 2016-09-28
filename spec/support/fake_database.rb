@@ -33,5 +33,13 @@ class FakeDatabase
     def pluck(*args)
       [3, 5]
     end
+
+    def identity
+      [:identity]
+    end
+
+    def find_by(*args)
+      nil
+    end
   end
 end

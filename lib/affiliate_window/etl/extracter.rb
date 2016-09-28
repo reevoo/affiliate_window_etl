@@ -125,7 +125,10 @@ class AffiliateWindow::ETL
 
       click_stats = results.fetch(:click_stats)
       click_stats.each do |record|
-        yielder.yield(record.merge(record_type: :click_stat))
+        yielder.yield(record.merge(
+          record_type: :click_stat,
+          date: date,
+        ))
       end
 
       write "Extracted #{click_stats.count} click stats for #{date}"
@@ -144,7 +147,10 @@ class AffiliateWindow::ETL
 
       impression_stats = results.fetch(:impression_stats)
       impression_stats.each do |record|
-        yielder.yield(record.merge(record_type: :impression_stat))
+        yielder.yield(record.merge(
+          record_type: :impression_stat,
+          date: date,
+        ))
       end
 
       write "Extracted #{impression_stats.count} impression stats for #{date}"
