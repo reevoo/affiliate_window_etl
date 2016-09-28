@@ -141,6 +141,33 @@ class AffiliateWindow::ETL
           t.integer :impressions
           t.timestamps
         end
+
+        [
+          Database::ClickStat,
+          Database::CommissionGroup,
+          Database::CommissionRange,
+          Database::ImpressionStat,
+          Database::Merchant,
+          Database::MerchantSector,
+          Database::Transaction,
+          Database::TransactionPart,
+          Database::TransactionProduct,
+        ].each do |model|
+          table_name = model.name.split("::").last.underscore + "s"
+          index_name = "#{table_name}_identity"
+
+          add_index table_name, model.identity, unique: true, name: index_name
+        end
+
+        add_index :transactions, :status
+        add_index :transactions, :paid
+        add_index :transactions, :merchant_id
+        add_index :transactions, :clickref
+        add_index :transactions, :click_date
+        add_index :transactions, :transaction_date
+        add_index :transactions, :validation_date
+        add_index :transaction_parts, :transaction_id
+        add_index :transaction_products, :transaction_id
       end
     end
   end
