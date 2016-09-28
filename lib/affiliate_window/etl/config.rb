@@ -34,14 +34,8 @@ class AffiliateWindow::ETL
       env.fetch("POSTGRES_PASSWORD", "")
     end
 
-    def start_date
-      one_week_ago = (Date.today - 7).to_s
-      Date.parse(env.fetch("START_DATE", one_week_ago))
-    end
-
-    def end_date
-      yesterday = (Date.today - 1).to_s
-      Date.parse(env.fetch("END_DATE", yesterday))
+    def last_n_days
+      env.fetch("LAST_N_DAYS", 7)
     end
 
     def output_stream

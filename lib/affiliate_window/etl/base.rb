@@ -1,37 +1,48 @@
 class AffiliateWindow::ETL
-  attr_accessor :config, :client
+  attr_accessor :config
 
   def initialize(env: ENV)
     self.config = Config.new(env: env)
-    self.client = AffiliateWindow.login(
-      account_id: config.account_id,
-      affiliate_api_password: config.affiliate_api_password,
-    )
   end
 
   def run
-    extracter = Extracter.new(
-      client: client,
-      interval: interval,
-      output: config.output_stream,
-    )
-
-    transformer = Transformer.new
-    loader = Loader.new(database: database)
-
-    extracter.extract.each do |record|
-      transformer.transform(record).each do |transformed_record|
-        loader.load(transformed_record)
+    scheduler.jobs.each do |job|
+      extracter.extract(job.type, job.args).each do |record|
+        transformer.transform(record).each do |transformed_record|
+          loader.load(transformed_record)
+        end
       end
     end
   end
 
   private
 
-  def interval
-    Interval.new(
-      from: config.start_date,
-      to: config.end_date,
+  def scheduler
+    Scheduler.new(
+      database: database,
+      last_n_days: config.last_n_days,
+    )
+  end
+
+  def extracter
+    Extracter.new(
+      client: client,
+      output: config.output_stream,
+    )
+  end
+
+  def transformer
+    Transformer.new
+  end
+
+  def loader
+    Loader.new(database: database)
+  end
+
+  def client
+    AffiliateWindow.login(
+      account_id: config.account_id,
+      affiliate_api_password: config.affiliate_api_password,
     )
   end
 

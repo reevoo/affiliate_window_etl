@@ -4,6 +4,7 @@ require "support/fake_database"
 require "support/fake_client"
 
 require "rspec"
+require "timecop"
 require "pry"
 
 RSpec.configure do |config|
