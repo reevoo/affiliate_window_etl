@@ -1,5 +1,3 @@
-require "yaml"
-require "json"
 require "active_record"
 require "affiliate_window"
 
