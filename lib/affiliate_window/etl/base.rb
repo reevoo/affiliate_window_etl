@@ -40,18 +40,11 @@ class AffiliateWindow::ETL
   end
 
   def transformer
-    Transformer.new
+    Transformer.new(normaliser: normaliser)
   end
 
   def loader
     Loader.new(database: database)
-  end
-
-  def client
-    AffiliateWindow.login(
-      account_id: config.account_id,
-      affiliate_api_password: config.affiliate_api_password,
-    )
   end
 
   def database
@@ -64,7 +57,18 @@ class AffiliateWindow::ETL
     )
   end
 
+  def client
+    AffiliateWindow.login(
+      account_id: config.account_id,
+      affiliate_api_password: config.affiliate_api_password,
+    )
+  end
+
   def schema
     Schema.new
+  end
+
+  def normaliser
+    Normaliser.new
   end
 end

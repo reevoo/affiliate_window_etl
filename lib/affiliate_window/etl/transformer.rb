@@ -1,5 +1,11 @@
 class AffiliateWindow::ETL
   class Transformer
+    attr_accessor :normaliser
+
+    def initialize(normaliser:)
+      self.normaliser = normaliser
+    end
+
     def transform(record)
       record = record.dup
       record_type = record.fetch(:record_type)
@@ -26,7 +32,7 @@ class AffiliateWindow::ETL
     private
 
     def normalise_commision_ranges!(record, transformed_records)
-      commision_ranges = Normaliser.normalise!(
+      commision_ranges = normaliser.normalise!(
         record,
         field_name: :a_commission_ranges,
         nested_name: :commission_range,
@@ -40,7 +46,7 @@ class AffiliateWindow::ETL
     end
 
     def normalise_sectors!(record, transformed_records)
-      sectors = Normaliser.normalise!(
+      sectors = normaliser.normalise!(
         record,
         field_name: :a_sectors,
         nested_name: :merchant_sector,
@@ -54,7 +60,7 @@ class AffiliateWindow::ETL
     end
 
     def normalise_transaction_parts!(record, transformed_records)
-      transaction_parts = Normaliser.normalise!(
+      transaction_parts = normaliser.normalise!(
         record,
         field_name: :a_transaction_parts,
         nested_name: :transaction_part,
@@ -68,7 +74,7 @@ class AffiliateWindow::ETL
     end
 
     def normalise_transaction_products!(record, transformed_records)
-      transaction_products = Normaliser.normalise!(
+      transaction_products = normaliser.normalise!(
         record,
         field_name: :a_products,
         nested_name: :product,

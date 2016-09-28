@@ -12,7 +12,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
       },
     }
 
-    result = described_class.normalise!(
+    result = subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
@@ -33,7 +33,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
       },
     }
 
-    result = described_class.normalise!(
+    result = subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
@@ -48,7 +48,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
   it "returns an empty array if top-level field is nil" do
     record = { some_array: nil }
 
-    result = described_class.normalise!(
+    result = subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
@@ -61,7 +61,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
   it "returns an empty array if the top-level field is missing" do
     record = {}
 
-    result = described_class.normalise!(
+    result = subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
@@ -74,7 +74,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
   it "removes the top-level field from the record" do
     record = { some_array: nil }
 
-    described_class.normalise!(
+    subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
@@ -96,7 +96,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
       },
     }
 
-    result = described_class.normalise!(
+    result = subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
@@ -121,7 +121,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
       },
     }
 
-    result = described_class.normalise!(
+    result = subject.normalise!(
       record,
       field_name: :some_array,
       nested_name: :nested,
