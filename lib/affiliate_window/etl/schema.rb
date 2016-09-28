@@ -142,19 +142,9 @@ class AffiliateWindow::ETL
           t.timestamps
         end
 
-        [
-          Database::ClickStat,
-          Database::CommissionGroup,
-          Database::CommissionRange,
-          Database::ImpressionStat,
-          Database::Merchant,
-          Database::MerchantSector,
-          Database::Transaction,
-          Database::TransactionPart,
-          Database::TransactionProduct,
-        ].each do |model|
-          table_name = model.name.split("::").last.underscore + "s"
-          index_name = "#{table_name}_identity"
+        Database::MODELS.each do |record_type, model|
+          table_name = "#{record_type}s"
+          index_name = "#{record_type}_identity"
 
           add_index table_name, model.identity, unique: true, name: index_name
         end

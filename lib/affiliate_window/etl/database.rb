@@ -15,17 +15,7 @@ class AffiliateWindow::ETL
     end
 
     def model(record_type)
-      {
-        click_stat: ClickStat,
-        commission_group: CommissionGroup,
-        commission_range: CommissionRange,
-        impression_stat: ImpressionStat,
-        merchant: Merchant,
-        merchant_sector: MerchantSector,
-        transaction: Transaction,
-        transaction_part: TransactionPart,
-        transaction_product: TransactionProduct,
-      }.fetch(record_type)
+      MODELS.fetch(record_type)
     end
 
     class ClickStat < ActiveRecord::Base
@@ -85,5 +75,17 @@ class AffiliateWindow::ETL
         [:id]
       end
     end
+
+    MODELS = {
+      click_stat: ClickStat,
+      commission_group: CommissionGroup,
+      commission_range: CommissionRange,
+      impression_stat: ImpressionStat,
+      merchant: Merchant,
+      merchant_sector: MerchantSector,
+      transaction: Transaction,
+      transaction_part: TransactionPart,
+      transaction_product: TransactionProduct,
+    }
   end
 end
