@@ -2,26 +2,20 @@ class AffiliateWindow::ETL
   class Extracter
     CHUNK_SIZE = 100
 
-    attr_accessor :client, :interval, :output
+    attr_accessor :client, :output
 
-    def initialize(client:, interval:, output: nil)
+    def initialize(client:, output: nil)
       self.client = client
-      self.interval = interval
       self.output = output
     end
 
-    def extract
+    def extract(type, params = {})
       Enumerator.new do |yielder|
-        extract_merchants(yielder)
-        extract_transactions(yielder)
-        extract_click_stats(yielder)
-        extract_impression_stats(yielder)
+        public_send("extract_#{type}", yielder, params)
       end
     end
 
-    private
-
-    def extract_merchants(yielder)
+    def extract_merchants(yielder, _params)
       response = client.get_merchant_list
       merchants = response.fetch(:merchant)
       merchant_ids = merchants.map { |m| m.fetch(:i_id) }
@@ -39,10 +33,10 @@ class AffiliateWindow::ETL
         write "Extracted #{count} / #{merchant_ids.count} merchants"
       end
 
-      extract_commission_groups(merchant_ids, yielder)
+      extract_commission_groups(yielder, merchant_ids: merchant_ids)
     end
 
-    def extract_commission_groups(merchant_ids, yielder)
+    def extract_commission_groups(yielder, merchant_ids:)
       merchant_ids.each.with_index do |id, index|
         maybe_response = catch_invalid_relationship_error {
           client.get_commission_group_list(merchant_id: id)
@@ -64,34 +58,46 @@ class AffiliateWindow::ETL
       end
     end
 
-    def extract_transactions(yielder)
-      transaction_ids = []
+    def extract_daily_transactions(yielder, date:)
+      response = client.get_transaction_list(
+        start_date: "#{date}T00:00:00",
+        end_date: "#{date}T23:59:59",
+        date_type: "transaction",
+      )
+      results = response.fetch(:results)
+      pagination = response.fetch(:pagination)
 
-      interval.each_day do |start_of_day, end_of_day|
-        response = client.get_transaction_list(
-          start_date: start_of_day,
-          end_date: end_of_day,
-          date_type: "transaction",
-        )
-        results = response.fetch(:results)
-        pagination = response.fetch(:pagination)
+      check_all_records_received!(pagination)
 
-        check_all_records_received!(pagination)
+      transactions = results.fetch(:transaction)
+      transactions.each do |record|
+        yielder.yield(record.merge(record_type: :transaction))
+      end
 
-        transactions = results.fetch(:transaction)
+      write "Extracted #{transactions.count} transactions for #{date}"
+
+      transaction_ids = transactions.map { |t| t.fetch(:i_id) }
+      extract_transaction_products(yielder, transaction_ids: transaction_ids)
+    end
+
+    def extract_transactions(yielder, transaction_ids:)
+      count = 0
+      transaction_ids.each_slice(CHUNK_SIZE) do |ids|
+        response = client.get_transaction(transaction_ids: ids)
+
+        transactions = response.fetch(:transaction)
         transactions.each do |record|
           yielder.yield(record.merge(record_type: :transaction))
         end
 
-        transaction_ids += transactions.map { |t| t.fetch(:i_id) }
-
-        write "Extracted #{transactions.count} transactions for #{start_of_day}"
+        count += [CHUNK_SIZE, ids.count].min
+        write "Extracted #{count} / #{transaction_ids.count} transactions"
       end
 
-      extract_transaction_products(transaction_ids, yielder)
+      extract_transaction_products(yielder, transaction_ids: transaction_ids)
     end
 
-    def extract_transaction_products(transaction_ids, yielder)
+    def extract_transaction_products(yielder, transaction_ids:)
       count = 0
       transaction_ids.each_slice(CHUNK_SIZE) do |ids|
         response = client.get_transaction_product(transaction_ids: ids)
@@ -106,46 +112,48 @@ class AffiliateWindow::ETL
       end
     end
 
-    def extract_click_stats(yielder)
-      interval.each_day do |start_of_day, end_of_day|
-        response = client.get_click_stats(
-          start_date: start_of_day,
-          end_date: end_of_day,
-          date_type: "transaction",
-        )
-        results = response.fetch(:results)
-        pagination = response.fetch(:pagination)
+    def extract_daily_clicks(yielder, date:)
+      response = client.get_click_stats(
+        start_date: "#{date}T00:00:00",
+        end_date: "#{date}T23:59:59",
+        date_type: "transaction",
+      )
+      results = response.fetch(:results)
+      pagination = response.fetch(:pagination)
 
-        check_all_records_received!(pagination)
+      check_all_records_received!(pagination)
 
-        click_stats = results.fetch(:click_stats)
-        click_stats.each do |record|
-          yielder.yield(record.merge(record_type: :click_stat))
-        end
-
-        write "Extracted #{click_stats.count} click stats for #{start_of_day}"
+      click_stats = results.fetch(:click_stats)
+      click_stats.each do |record|
+        yielder.yield(record.merge(
+          record_type: :click_stat,
+          date: date,
+        ))
       end
+
+      write "Extracted #{click_stats.count} click stats for #{date}"
     end
 
-    def extract_impression_stats(yielder)
-      interval.each_day do |start_of_day, end_of_day|
-        response = client.get_impression_stats(
-          start_date: start_of_day,
-          end_date: end_of_day,
-          date_type: "transaction",
-        )
-        results = response.fetch(:results)
-        pagination = response.fetch(:pagination)
+    def extract_daily_impressions(yielder, date:)
+      response = client.get_impression_stats(
+        start_date: "#{date}T00:00:00",
+        end_date: "#{date}T23:59:59",
+        date_type: "transaction",
+      )
+      results = response.fetch(:results)
+      pagination = response.fetch(:pagination)
 
-        check_all_records_received!(pagination)
+      check_all_records_received!(pagination)
 
-        impression_stats = results.fetch(:impression_stats)
-        impression_stats.each do |record|
-          yielder.yield(record.merge(record_type: :impression_stat))
-        end
-
-        write "Extracted #{impression_stats.count} impression stats for #{start_of_day}"
+      impression_stats = results.fetch(:impression_stats)
+      impression_stats.each do |record|
+        yielder.yield(record.merge(
+          record_type: :impression_stat,
+          date: date,
+        ))
       end
+
+      write "Extracted #{impression_stats.count} impression stats for #{date}"
     end
 
     def check_all_records_received!(pagination)

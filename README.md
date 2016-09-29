@@ -2,16 +2,10 @@
 
 This gem provides an extract-transform-load process for retrieving records from
 the [Affiliate Window](http://www.affiliatewindow.com/) API and loading them
-into a Postgres database.
-
-##How it works
-
-It makes use of the
-[affiliate_window](https://github.com/reevoo/affiliate_window)
-client gem to retrieve records from the Publisher Service API, one day at a
-time. It transforms these records and normalises them to map nicely to a
-relational schema. It then writes them to a fluentd stream which outputs to
-Postgres.
+into a Postgres database. It works incrementally, updating existing records
+rather than creating duplicates. It handles its own scheduling and determines
+which records need to be retrieved from the API based on the current state of
+the database.
 
 ##How to run it
 
@@ -20,21 +14,18 @@ dependency of another application.
 
 **To run from this repository:**
 
-The ETL process can be run from this repository with `rake run`.
-
-This depends on a fluentd socket. You can run fluentd with `rake fluentd`. This
-generates `config/fluentd.conf` from the current environment variables.
-
-If you only want to generate this config, you can run `rake configure`.
-
-You'll need to create the Postgres database before running the ETL. You can
-write the table schema to standard output with `rake schema`.
+1. Create the database: `createdb affiliate_window`
+2. Migrate the database: `rake db:migrate`
+3. Run the ETL: `rake run`
 
 **To run as a dependency:**
 
 ```ruby
 require "affiliate_window/etl"
-AffiliateWindow::ETL.new.run
+etl = AffiliateWindow::ETL.new
+
+etl.migrate
+etl.run
 ```
 
 By default, it will inherit config from your environment variables. If you don't
@@ -75,10 +66,6 @@ The id of the Affiliate Window account for which to retrieve records.
 The API token of for the Publisher Service. Can be retrieved from
 [this page](https://www.affiliatewindow.com/affiliates/accountdetails.php).
 
-`FLUENTD_SOCKET`
-
-The location of the fluentd socket. Defaults to `/tmp/affwin.sock`.
-
 `POSTGRES_HOST`
 
 The hostname of the Postgres server. Defaults to `localhost`.
@@ -99,13 +86,11 @@ The name of the user on the Postgres server. Defaults to the current user.
 
 The password of the user on the Postgres server. Defaults to empty.
 
-`START_DATE`
+`LAST_N_DAYS`
 
-The earliest date that should be retrieved. Defaults to one week ago.
-
-`END_DATE`
-
-The latest date that should be retrieved (inclusive). Defaults to yesterday.
+The number of days to retrieve. When the ETL runs, it will fetch this many days
+of data, prior to today. It can take a while for transactions to appear in the
+API. It is recommended this be set to 60 in production. Defaults to 7.
 
 `DEBUG_STREAM`
 

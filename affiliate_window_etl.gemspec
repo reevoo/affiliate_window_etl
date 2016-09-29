@@ -12,12 +12,11 @@ Gem::Specification.new do |s|
   s.files       = ["README.md"] + Dir["lib/**/*.*"]
 
   s.add_dependency "affiliate_window", "~> 0.0"
-  s.add_dependency "fluentd", "~> 0.14"
-  s.add_dependency "fluent-plugin-sql", "~> 0.5"
-  s.add_dependency "msgpack", "~> 1.0"
+  s.add_dependency "activerecord", "~> 5.0"
   s.add_dependency "pg", "~> 0.19"
 
   s.add_development_dependency "rspec", "~> 3.5"
   s.add_development_dependency "pry", "~> 0.10"
   s.add_development_dependency "rake", "~> 11.3"
+  s.add_development_dependency "timecop", "~> 0.8"
 end

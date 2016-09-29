@@ -1,6 +1,9 @@
 require "spec_helper"
 
 RSpec.describe AffiliateWindow::ETL::Transformer do
+  let(:normaliser) { AffiliateWindow::ETL::Normaliser.new }
+  subject { described_class.new(normaliser: normaliser) }
+
   it "transforms a record to an array of attributes" do
     result = subject.transform(
       record_type: :record_type,
