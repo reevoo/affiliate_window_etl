@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry", "~> 0.10"
   s.add_development_dependency "rake", "~> 11.3"
   s.add_development_dependency "timecop", "~> 0.8"
+  s.add_development_dependency "bundler-audit", "~> 0.5"
 end
