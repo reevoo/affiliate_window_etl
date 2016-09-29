@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/reevoo/affiliate_window_etl"
   s.files       = ["README.md"] + Dir["lib/**/*.*"]
 
-  s.add_dependency "affiliate_window", "~> 0.0"
+  s.add_dependency "affiliate_window", "~> 0.1"
   s.add_dependency "activerecord", "~> 5.0"
   s.add_dependency "pg", "~> 0.19"
 
