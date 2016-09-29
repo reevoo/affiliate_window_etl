@@ -66,25 +66,11 @@ The id of the Affiliate Window account for which to retrieve records.
 The API token of for the Publisher Service. Can be retrieved from
 [this page](https://www.affiliatewindow.com/affiliates/accountdetails.php).
 
-`POSTGRES_HOST`
+`DATABASE_URL`
 
-The hostname of the Postgres server. Defaults to `localhost`.
+The connection to the database may be configured with `DATABASE_URL`.
 
-`POSTGRES_PORT`
-
-The port of the Postgres server. Defaults to `5432`.
-
-`POSTGRES_DATABASE`
-
-The name of the database on the Postgres server. Defaults to `affiliate_window`.
-
-`POSTGRES_USERNAME`
-
-The name of the user on the Postgres server. Defaults to the current user.
-
-`POSTGRES_PASSWORD`
-
-The password of the user on the Postgres server. Defaults to empty.
+e.g. `postgres://user:password@database_host:1234/my-database?pool=5&encoding=unicode`
 
 `LAST_N_DAYS`
 

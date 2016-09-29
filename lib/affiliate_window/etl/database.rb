@@ -1,17 +1,13 @@
 class AffiliateWindow::ETL
   class Database
-    attr_accessor :params
+    attr_accessor :database_url
 
-    def initialize(params)
-      self.params = params
+    def initialize(database_url)
+      self.database_url = database_url
     end
 
     def connect!
-      ActiveRecord::Base.establish_connection(params.merge(
-        adapter: "postgresql",
-        encoding: "unicode",
-        pool: 5,
-      ))
+      ActiveRecord::Base.establish_connection(database_url)
     end
 
     def model(record_type)
