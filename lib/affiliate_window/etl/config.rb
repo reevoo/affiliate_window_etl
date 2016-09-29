@@ -6,32 +6,16 @@ class AffiliateWindow::ETL
       self.env = env
     end
 
+    def database_url
+      env.fetch("DATABASE_URL", "postgres://#{`whoami`.strip}@localhost:5432/affiliate_window?pool=5&encoding=unicode")
+    end
+
     def account_id
       env.fetch("ACCOUNT_ID", 1234)
     end
 
     def affiliate_api_password
       env.fetch("AFFILIATE_API_PASSWORD", "password")
-    end
-
-    def postgres_host
-      env.fetch("POSTGRES_HOST", "localhost")
-    end
-
-    def postgres_port
-      env.fetch("POSTGRES_PORT", 5432)
-    end
-
-    def postgres_database
-      env.fetch("POSTGRES_DATABASE", "affiliate_window")
-    end
-
-    def postgres_username
-      env.fetch("POSTGRES_USERNAME", `whoami`.strip)
-    end
-
-    def postgres_password
-      env.fetch("POSTGRES_PASSWORD", "")
     end
 
     def last_n_days

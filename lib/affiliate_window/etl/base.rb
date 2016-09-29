@@ -48,13 +48,7 @@ class AffiliateWindow::ETL
   end
 
   def database
-    Database.new(
-      host: config.postgres_host,
-      port: config.postgres_port,
-      database: config.postgres_database,
-      username: config.postgres_username,
-      password: config.postgres_password,
-    )
+    Database.new(config.database_url)
   end
 
   def client
