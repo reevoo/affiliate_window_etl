@@ -5,7 +5,7 @@ class FakeClient
     self.rows_returned = 1
   end
 
-  def get_merchant_list
+  def get_merchant_list # rubocop:disable Style/AccessorMethodName
     { merchant: [{ i_id: 123 }, { i_id: 456 }] }
   end
 
@@ -20,7 +20,7 @@ class FakeClient
     { merchant: merchant_ids.map { |id| data.fetch(id) } }
   end
 
-  def get_commission_group_list(params)
+  def get_commission_group_list(_params)
     {
       commission_group: [
         { commission_group_name: "foo" },
@@ -58,7 +58,7 @@ class FakeClient
     { transaction_product: products }
   end
 
-  def get_click_stats(params)
+  def get_click_stats(_params)
     {
       results: {
         click_stats: [
@@ -72,7 +72,7 @@ class FakeClient
     }
   end
 
-  def get_impression_stats(params)
+  def get_impression_stats(_params)
     {
       results: {
         impression_stats: [

@@ -1,6 +1,6 @@
 class AffiliateWindow::ETL
-  class Schema
-    def migrate
+  class Schema # rubocop:disable Metrics/ClassLength
+    def migrate # rubocop:disable Metrics/AbcSize
       ActiveRecord::Schema.define do
         create_table :merchants do |t|
           t.string :name

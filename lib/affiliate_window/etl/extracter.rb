@@ -1,5 +1,5 @@
 class AffiliateWindow::ETL
-  class Extracter
+  class Extracter # rubocop:disable Metrics/ClassLength
     CHUNK_SIZE = 100
 
     attr_accessor :client, :output
@@ -15,7 +15,7 @@ class AffiliateWindow::ETL
       end
     end
 
-    def extract_merchants(yielder, _params)
+    def extract_merchants(yielder, _params) # rubocop:disable Metrics/AbcSize
       response = client.get_merchant_list
       merchants = response.fetch(:merchant)
       merchant_ids = merchants.map { |m| m.fetch(:i_id) }
@@ -38,9 +38,9 @@ class AffiliateWindow::ETL
 
     def extract_commission_groups(yielder, merchant_ids:)
       merchant_ids.each.with_index do |id, index|
-        maybe_response = catch_invalid_relationship_error {
+        maybe_response = catch_invalid_relationship_error do
           client.get_commission_group_list(merchant_id: id)
-        }
+        end
 
         next unless maybe_response
         response = maybe_response
@@ -160,20 +160,16 @@ class AffiliateWindow::ETL
       retrieved = pagination.fetch(:i_rows_returned)
       total = pagination.fetch(:i_rows_available)
 
-      unless total == retrieved
-        raise "Did not receive all records: #{retrieved} retrieved out of #{total}"
-      end
+      fail "Did not receive all records: #{retrieved} retrieved out of #{total}" unless total == retrieved
     end
 
     # If the current account is not affiliated with the merchant, the API does
     # not let you retrieve commission groups for that merchant.
     def catch_invalid_relationship_error(&block)
-      begin
-        block.call
-      rescue AffiliateWindow::Error => e
-        raise unless e.message.match(%r{Invalid merchant / affiliate relationship})
-        nil
-      end
+      block.call
+    rescue AffiliateWindow::Error => e
+      raise unless e.message.match(/Invalid merchant \/ affiliate relationship/)
+      nil
     end
 
     def write(message)

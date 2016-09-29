@@ -1,5 +1,5 @@
 class AffiliateWindow::ETL
-  class Transformer
+  class Transformer # rubocop:disable Metrics/ClassLength
     attr_accessor :normaliser
 
     def initialize(normaliser:)
@@ -39,8 +39,8 @@ class AffiliateWindow::ETL
         foreign_name: :merchant_id,
       )
 
-      commision_ranges.each do |record|
-        attributes = infer_field_names(record)
+      commision_ranges.each do |commision_range|
+        attributes = infer_field_names(commision_range)
         transformed_records.push(attributes)
       end
     end
@@ -53,8 +53,8 @@ class AffiliateWindow::ETL
         foreign_name: :merchant_id,
       )
 
-      sectors.each do |record|
-        attributes = infer_field_names(record)
+      sectors.each do |sector|
+        attributes = infer_field_names(sector)
         transformed_records.push(attributes)
       end
     end
@@ -67,8 +67,8 @@ class AffiliateWindow::ETL
         foreign_name: :transaction_id,
       )
 
-      transaction_parts.each do |record|
-        attributes = infer_field_names(record)
+      transaction_parts.each do |transaction_part|
+        attributes = infer_field_names(transaction_part)
         transformed_records.push(attributes)
       end
     end
@@ -83,8 +83,8 @@ class AffiliateWindow::ETL
         record_type: :transaction_product,
       )
 
-      transaction_products.each do |record|
-        attributes = infer_field_names(record)
+      transaction_products.each do |transaction_product|
+        attributes = infer_field_names(transaction_product)
         transformed_records.push(attributes)
       end
     end
@@ -102,7 +102,7 @@ class AffiliateWindow::ETL
 
           hash.merge!(sub_attributes)
         when Array
-          raise arrays_unsupported_error(field_name, value)
+          fail arrays_unsupported_error(field_name, value)
         else
           new_name = "#{prefix}#{new_name}".to_sym
           attributes = record.fetch(field_name, nil)
@@ -120,7 +120,7 @@ class AffiliateWindow::ETL
       end
     end
 
-    def arrays_unsupported_error(field_name, array)
+    def arrays_unsupported_error(field_name, _array)
       message = "Unable to transform '#{field_name}' because its value is an array.\n"
       message += "To cope with this, normalise elements of the array into a separate table.\n"
       message += "Then, add a foreign key from the normalised record to this one."

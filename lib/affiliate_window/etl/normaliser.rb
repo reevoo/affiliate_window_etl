@@ -1,6 +1,6 @@
 class AffiliateWindow::ETL
   class Normaliser
-    def normalise!(record, field_name:, nested_name:, foreign_name:, id_name: :i_id, record_type: nil)
+    def normalise!(record, field_name:, nested_name:, foreign_name:, id_name: :i_id, record_type: nil) # rubocop:disable Metrics/ParameterLists, Metrics/LineLength
       record_type ||= nested_name
 
       value = record.delete(field_name)

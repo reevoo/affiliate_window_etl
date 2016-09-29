@@ -14,5 +14,13 @@ rescue LoadError
   puts "bundler-audit not loaded"
 end
 
+begin
+  require "reevoocop/rake_task"
+  ReevooCop::RakeTask.new(:reevoocop)
+  task default: :reevoocop
+rescue LoadError
+  puts "reevoocop not loaded"
+end
+
 $LOAD_PATH.unshift("lib")
 load "affiliate_window/etl/tasks.rake"

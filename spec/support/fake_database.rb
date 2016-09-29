@@ -30,7 +30,7 @@ class FakeDatabase
       self
     end
 
-    def pluck(*args)
+    def pluck(*_args)
       [3, 5]
     end
 
@@ -38,7 +38,7 @@ class FakeDatabase
       [:identity]
     end
 
-    def find_by(*args)
+    def find_by(*_args)
       nil
     end
   end

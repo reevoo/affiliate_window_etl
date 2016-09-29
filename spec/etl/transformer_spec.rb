@@ -38,9 +38,9 @@ RSpec.describe AffiliateWindow::ETL::Transformer do
         i_baz: 123,
         o_qux: {
           s_abc: "abc",
-          bcd: 456
-        }
-      }
+          bcd: 456,
+        },
+      },
     )
 
     expect(result).to eq [{
@@ -53,9 +53,9 @@ RSpec.describe AffiliateWindow::ETL::Transformer do
   end
 
   it "raises a helpful error if the value is an array" do
-    expect {
+    expect do
       subject.transform(record_type: :record_type, foo: [])
-    }.to raise_error(described_class::TypeError, /normalise elements of the array/)
+    end.to raise_error(described_class::TypeError, /normalise elements of the array/)
   end
 
   describe "normalisations" do
@@ -68,7 +68,7 @@ RSpec.describe AffiliateWindow::ETL::Transformer do
           transaction_part: [
             { bar: "baz" },
             { bar: "qux" },
-          ]
+          ],
         },
       }
 
@@ -89,7 +89,7 @@ RSpec.describe AffiliateWindow::ETL::Transformer do
           record_type: :transaction,
           id: 123,
           foo: "bar",
-        }
+        },
       ]
     end
   end

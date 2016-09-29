@@ -8,7 +8,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
         nested: [
           { foo: "bar" },
           { foo: "baz" },
-        ]
+        ],
       },
     }
 
@@ -92,7 +92,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
         nested: [
           { foo: "bar" },
           { foo: "baz" },
-        ]
+        ],
       },
     }
 
@@ -117,7 +117,7 @@ RSpec.describe AffiliateWindow::ETL::Normaliser do
         nested: [
           { foo: "bar" },
           { foo: "baz" },
-        ]
+        ],
       },
     }
 
