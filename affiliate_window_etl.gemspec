@@ -5,7 +5,8 @@ Gem::Specification.new do |s|
   s.version     = AffiliateWindow::ETL::VERSION
   s.license     = "???"
   s.summary     = "Affiliate Window ETL"
-  s.description = "An ETL for retrieving records from the Affiliate Window API and loading them into a Postgres database."
+  s.description = "An ETL for retrieving records from the Affiliate Window API" \
+                  "and loading them into a Postgres database."
   s.author      = "Reevoo Developers"
   s.email       = "developers@reevoo.com"
   s.homepage    = "https://github.com/reevoo/affiliate_window_etl"
@@ -19,4 +20,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "pry", "~> 0.10"
   s.add_development_dependency "rake", "~> 11.3"
   s.add_development_dependency "timecop", "~> 0.8"
+  s.add_development_dependency "bundler-audit", "~> 0.5"
+  s.add_development_dependency "reevoocop", "~> 0.0.8"
 end

@@ -61,9 +61,9 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     client.rows_returned = 0
     enumerator = subject.extract(:daily_transactions, date: "2016-01-01")
 
-    expect {
+    expect do
       enumerator.to_a
-    }.to raise_error(/0 retrieved out of 1/)
+    end.to raise_error(/0 retrieved out of 1/)
   end
 
   it "can be provided with an optional output stream to log behaviour" do
@@ -74,6 +74,6 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     enumerator = subject.extract(:merchants, date: "2016-01-01")
     enumerator.to_a
 
-    expect(output.string).to match(%r{Extracted 2 / 2 merchants})
+    expect(output.string).to match(/Extracted 2 \/ 2 merchants/)
   end
 end

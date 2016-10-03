@@ -30,7 +30,9 @@ RSpec.describe AffiliateWindow::ETL::Config do
       expect(subject.account_id).to eq(1234)
       expect(subject.affiliate_api_password).to eq("password")
       expect(subject.last_n_days).to eq(7)
-      expect(subject.database_url).to eq("postgres://#{`whoami`.strip}@localhost:5432/affiliate_window?pool=5&encoding=unicode")
+      expect(subject.database_url).to eq(
+        "postgres://#{`whoami`.strip}@localhost:5432/affiliate_window?pool=5&encoding=unicode",
+      )
       expect(subject.output_stream).to eq($stdout)
     end
   end
