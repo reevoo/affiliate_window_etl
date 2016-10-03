@@ -102,7 +102,7 @@ class AffiliateWindow
         count = 0
         transaction_ids.each_slice(CHUNK_SIZE) do |ids|
           response = client.get_transaction_product(transaction_ids: ids)
-          transaction_products = response.fetch(:transaction_product)
+          transaction_products = [response.fetch(:transaction_product)].flatten
 
           transaction_products.each do |record|
             yielder.yield(record.merge(record_type: :transaction_product))
