@@ -86,4 +86,8 @@ class FakeClient
       },
     }
   end
+
+  def remaining_quota
+    14_997
+  end
 end

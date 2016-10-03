@@ -3,7 +3,7 @@ PATH
   specs:
     affiliate_window_etl (0.0.1)
       activerecord (~> 5.0)
-      affiliate_window (~> 0.0)
+      affiliate_window (~> 0.1)
       pg (~> 0.19)
 
 GEM
@@ -115,4 +115,4 @@ DEPENDENCIES
   timecop (~> 0.8)
 
 BUNDLED WITH
-   1.12.5
+   1.13.1

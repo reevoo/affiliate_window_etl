@@ -175,7 +175,8 @@ class AffiliateWindow
 
       def write(message)
         return unless output
-        output.puts(message)
+        message_with_quota = "[quota:#{client.remaining_quota}] #{message}"
+        output.puts(message_with_quota)
       end
     end
   end
