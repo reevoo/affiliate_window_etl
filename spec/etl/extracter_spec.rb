@@ -39,6 +39,18 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     ]
   end
 
+  context "when the 'transaction_product' value contains a single record" do
+    it "extracts transactions" do
+      enumerator = subject.extract(:transactions, transaction_ids: [3])
+      records = enumerator.to_a
+
+      expect(records).to eq [
+        { record_type: :transaction, i_id: 3 },
+        { record_type: :transaction_product, name: "iPhone 3" },
+      ]
+    end
+  end
+
   it "extracts daily clicks" do
     enumerator = subject.extract(:daily_clicks, date: "2016-01-01")
     records = enumerator.to_a

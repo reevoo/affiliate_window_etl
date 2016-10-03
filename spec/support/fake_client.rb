@@ -54,6 +54,7 @@ class FakeClient
   def get_transaction_product(params)
     transaction_ids = params.fetch(:transaction_ids)
     products = transaction_ids.map { |id| { name: "iPhone #{id}" } }
+    products = products.first if products.size == 1
 
     { transaction_product: products }
   end
