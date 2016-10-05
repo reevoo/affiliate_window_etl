@@ -49,6 +49,15 @@ namespace :etl do
 end
 ```
 
+If you are incorporating the ETL into an app that has its own migrations, it is
+recommended you copy the migrations into the container app:
+
+```ruby
+etl.migration_filenames.each do |filename|
+  # copy to db/migrate/
+end
+```
+
 ##How to configure it
 
 The library tries to be [twelve-factor](https://12factor.net/) compliant and is
