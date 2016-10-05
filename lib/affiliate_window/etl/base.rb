@@ -20,8 +20,12 @@ class AffiliateWindow
 
     def migrate
       database.connect!
+      ActiveRecord::Migrator.migrate(migrations_path)
+    end
 
-      schema.migrate
+    def migration_filenames
+      path = File.expand_path("../../../db/migrate/*", File.dirname(__FILE__))
+      Dir[path].each
     end
 
     private
@@ -65,6 +69,10 @@ class AffiliateWindow
 
     def normaliser
       Normaliser.new
+    end
+
+    def migrator
+      Migrator.new
     end
   end
 end
