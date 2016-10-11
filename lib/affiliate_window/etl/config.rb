@@ -23,7 +23,7 @@ class AffiliateWindow
       end
 
       def last_n_days
-        env.fetch("LAST_N_DAYS", 7)
+        env.fetch("LAST_N_DAYS", "7").to_i
       end
 
       def output_stream
