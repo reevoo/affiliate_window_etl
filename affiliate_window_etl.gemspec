@@ -3,7 +3,7 @@ require "./lib/affiliate_window/etl/version"
 Gem::Specification.new do |s|
   s.name        = "affiliate_window_etl"
   s.version     = AffiliateWindow::ETL::VERSION
-  s.license     = "???"
+  s.license     = "MIT"
   s.summary     = "Affiliate Window ETL"
   s.description = "An ETL for retrieving records from the Affiliate Window API" \
                   "and loading them into a Postgres database."
