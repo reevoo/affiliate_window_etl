@@ -3,4 +3,4 @@ name = "affiliate-window-etl"
 repo = "quay.io/reevoo/affiliate_window_etl"
 
 [build]
-builder = "ruby"
+builder = "rubygem"
