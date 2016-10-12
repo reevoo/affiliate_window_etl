@@ -22,4 +22,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "timecop", "~> 0.8"
   s.add_development_dependency "bundler-audit", "~> 0.5"
   s.add_development_dependency "reevoocop", "~> 0.0.8"
+  s.add_development_dependency "simplecov", "~> 0.11"
+  s.add_development_dependency "simplecov-console", "~> 0.3"
 end

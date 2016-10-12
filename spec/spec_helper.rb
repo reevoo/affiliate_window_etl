@@ -1,3 +1,9 @@
+require "simplecov"
+require "simplecov-console"
+SimpleCov.formatter = SimpleCov::Formatter::Console
+SimpleCov.minimum_coverage 90
+SimpleCov.start
+
 require "affiliate_window_etl"
 
 require "support/fake_database"
