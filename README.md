@@ -1,5 +1,7 @@
 ##Affiliate Window ETL
 
+[![Build Status](https://travis-ci.org/reevoo/affiliate_window_etl.svg?branch=master)](https://travis-ci.org/reevoo/affiliate_window_etl)
+
 This gem provides an extract-transform-load process for retrieving records from
 the [Affiliate Window](http://www.affiliatewindow.com/) API and loading them
 into a Postgres database. It works incrementally, updating existing records
