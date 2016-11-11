@@ -20,7 +20,7 @@ class AffiliateWindow
 
     def migrate
       database.connect!
-      ActiveRecord::Migrator.migrate(migrations_path)
+      ActiveRecord::Migrator.migrate("db/migrate")
     end
 
     def migration_filenames
