@@ -87,10 +87,11 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     end.to raise_error(/0 retrieved out of 1/)
   end
 
-  it "can be provided with an optional output stream to log behaviour" do
+  it "can be provided with an optional logger" do
     output = StringIO.new
+    logger = Logger.new(output)
 
-    subject = described_class.new(client: client, output: output)
+    subject = described_class.new(client: client, logger: logger)
 
     enumerator = subject.extract(:merchants, date: "2016-01-01")
     enumerator.to_a

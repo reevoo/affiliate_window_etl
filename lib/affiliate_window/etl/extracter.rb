@@ -3,11 +3,11 @@ class AffiliateWindow
     class Extracter # rubocop:disable Metrics/ClassLength
       CHUNK_SIZE = 100
 
-      attr_accessor :client, :output
+      attr_accessor :client, :logger
 
-      def initialize(client:, output: nil)
+      def initialize(client:, logger: nil)
         self.client = client
-        self.output = output
+        self.logger = logger
       end
 
       def extract(type, params = {})
@@ -181,9 +181,8 @@ class AffiliateWindow
       end
 
       def write(message)
-        return unless output
-        message_with_quota = "[quota:#{client.remaining_quota}] #{message}"
-        output.puts(message_with_quota)
+        return unless logger
+        logger.debug { "[quota:#{client.remaining_quota}] #{message}" }
       end
     end
   end

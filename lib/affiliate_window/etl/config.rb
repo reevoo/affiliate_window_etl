@@ -26,11 +26,12 @@ class AffiliateWindow
         env.fetch("LAST_N_DAYS", "7").to_i
       end
 
-      def output_stream
+      def logger
         name = env.fetch("DEBUG_STREAM", "stdout")
         name = name.downcase.to_sym
 
-        { stdout: $stdout, stderr: $stderr, none: nil }.fetch(name)
+        stream = { stdout: $stdout, stderr: $stderr, none: nil }.fetch(name)
+        Logger.new(stream) if stream
       end
     end
   end

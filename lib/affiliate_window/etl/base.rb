@@ -1,9 +1,10 @@
 class AffiliateWindow
   class ETL
-    attr_accessor :config
+    attr_accessor :config, :logger
 
-    def initialize(env: ENV)
+    def initialize(env: ENV, logger: nil)
       self.config = Config.new(env: env)
+      self.logger = logger || config.logger
     end
 
     def run
@@ -40,7 +41,7 @@ class AffiliateWindow
     def extracter
       Extracter.new(
         client: client,
-        output: config.output_stream,
+        logger: logger,
       )
     end
 

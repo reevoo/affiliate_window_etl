@@ -19,7 +19,7 @@ RSpec.describe AffiliateWindow::ETL::Config do
       expect(subject.affiliate_api_password).to eq("sekret")
       expect(subject.last_n_days).to eq(15)
       expect(subject.database_url).to eq("postgres://foo@bar/whatever")
-      expect(subject.output_stream).to be_nil
+      expect(subject.logger).to be_nil
     end
   end
 
@@ -33,7 +33,8 @@ RSpec.describe AffiliateWindow::ETL::Config do
       expect(subject.database_url).to eq(
         "postgres://#{`whoami`.strip}@localhost:5432/affiliate_window?pool=5&encoding=unicode",
       )
-      expect(subject.output_stream).to eq($stdout)
+      expect(subject.logger).to be_a(Logger)
+      expect { subject.logger.debug("test") }.to output.to_stdout
     end
   end
 end

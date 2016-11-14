@@ -95,6 +95,9 @@ The stream to write debug output. Defaults to `stdout`.
 
 Valid options are: `stdout`, `stderr` and `none`.
 
+Optionally, you can initialize the ETL with a custom logger if you are using the
+Ruby API.
+
 ## How to contribute
 
 Bug reports and pull requests are welcome on
