@@ -102,6 +102,13 @@ class AffiliateWindow
         count = 0
         transaction_ids.each_slice(CHUNK_SIZE) do |ids|
           response = client.get_transaction_product(transaction_ids: ids)
+
+          # Occasionally, Affiliate Window fails to record purchases so they
+          # artificially create some by extrapolating historical data. The
+          # transactions they create don't have any associated product data so
+          # skip over empty transaction_product responses.
+          next unless response
+
           transaction_products = [response.fetch(:transaction_product)].flatten
 
           transaction_products.each do |record|

@@ -51,6 +51,15 @@ RSpec.describe AffiliateWindow::ETL::Extracter do
     end
   end
 
+  context "when none of the transactions have transaction_products" do
+    it "does not error" do
+      allow(client).to receive(:get_transaction_product).and_return(nil)
+      enumerator = subject.extract(:transactions, transaction_ids: [3])
+
+      expect { enumerator.to_a }.not_to raise_error
+    end
+  end
+
   it "extracts daily clicks" do
     enumerator = subject.extract(:daily_clicks, date: "2016-01-01")
     records = enumerator.to_a
